@@ -1,8 +1,4 @@
-/* notes:
-extract data - > as we load page
 
-save data 
-*/
 
 let currentBoardId = window.location.pathname.split("/")[2];
 console.log(currentBoardId);
@@ -16,23 +12,31 @@ chrome.storage.local.clear(() => {
   }
 });*/
 
+function waitForElement(selector) {
+  return new Promise((resolve) => {
+      const interval = setInterval(() => {
+          const element = document.querySelector(selector);
+          if (element) {
+              clearInterval(interval);
+              resolve(element);
+          }
+      }, 100);
+  });
+}
+
 
 function applyColors(boardId) {
   chrome.storage.local.get([boardId], (result) => {
     if (result[boardId]) {
       Object.entries(result[boardId]).forEach(([item, color]) => {
-        console.log(result);
-        console.log(item, color);
-        let listToChange = document.querySelector(`[data-list-id="${item}"].tBRLg6uDC7sSyw`);
-        if (listToChange){
-
-          changeCardColor(listToChange, color);
-        }
-        /*
-        fetch an object with data-list-id that = item
-        if not found, delete it from database, log it and go to next item without crashing
-        if found, applyColor(color stored in item)
-        */
+        query = `[data-list-id="${item}"].tBRLg6uDC7sSyw`
+        waitForElement(query).then((listToChange) => {
+          console.log(result);
+          console.log(item, color);
+          if (listToChange){
+            changeCardColor(listToChange, color);
+          }
+        });
       });
     }
   });
@@ -55,24 +59,18 @@ function changeCardColor(card, color){
 }
 
 
-
 const observer = new MutationObserver(() => {
   let newBoardId = window.location.pathname.split("/")[2];
   if (newBoardId !== currentBoardId) {
     currentBoardId = newBoardId;
     console.log("Board changed to:", currentBoardId);
-    setTimeout(() => applyColors(currentBoardId), 1000);
+    applyColors(currentBoardId);
 
   }
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
-
-setTimeout(() => applyColors(currentBoardId), 1000);
-
-
-
-
+applyColors(currentBoardId);
 
 
 
