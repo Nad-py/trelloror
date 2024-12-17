@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "trellcolor",
+    "version": "1.0",
+    "description": "Change the background color of Trello cards.",
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "storage",
+      "tabs"  
+    ],
+    "host_permissions": [
+      "https://trello.com/*"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["https://trello.com/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
