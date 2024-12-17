@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const defaultColor = "#ffcccb";
+  const defaultColor = "#f1f2f4";
 
   const colorPicker = document.getElementById("color-picker");
   const colorModeBtn = document.getElementById("color-mode-btn");
